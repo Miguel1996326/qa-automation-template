@@ -19,7 +19,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Ejecutar tests
-        run: pytest -m smoke --alluredir=allure-results
+        run: pytest --alluredir=allure-results
 
       - name: Subir resultados Allure
         uses: actions/upload-artifact@v4
