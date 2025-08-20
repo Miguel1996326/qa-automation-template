@@ -1,17 +1,28 @@
 name: tests
-on: [push, pull_request]
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
       - name: Instalar Google Chrome
-        uses: browser-actions/setup-chrome@v1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
       - name: Instalar dependencias
         run: |
@@ -19,6 +30,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Ejecutar tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: pytest -m smoke --alluredir=allure-results
 
       - name: Subir resultados Allure
